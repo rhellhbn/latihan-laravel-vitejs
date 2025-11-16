@@ -11,29 +11,16 @@ export default defineConfig({
                 "resources/css/trix-custom.css",
                 "resources/js/app.jsx"
             ],
-            refresh: true,
-            buildDirectory: 'build', // Tanpa subfolder .vite
+            refresh: true
         }),
         react(),
     ],
+
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./resources/js"),
             "@/components": path.resolve(__dirname, "./resources/js/components"),
             "@/lib": path.resolve(__dirname, "./resources/js/lib"),
-        },
-    },
-    build: {
-        manifest: 'manifest.json', // Nama file manifest
-        outDir: 'public/build',
-        emptyOutDir: true,
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    vendor: ["react", "react-dom"],
-                    inertia: ["@inertiajs/react"],
-                },
-            },
         },
     },
 });
