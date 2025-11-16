@@ -9,7 +9,7 @@
 
     <!-- Scripts -->
     @viteReactRefresh
-    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+    @vite(['resources/css/app.css', 'resources/css/trix-custom.css', 'resources/js/app.jsx'])
     @inertiaHead
 </head>
 
