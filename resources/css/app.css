@@ -123,45 +123,222 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Force LTR untuk semua element */
+    direction: ltr !important;
   }
+  
   body {
     @apply bg-background text-foreground;
+    /* Force LTR untuk body */
+    direction: ltr !important;
+    text-align: left !important;
+  }
+  
+  /* Force LTR untuk HTML */
+  html {
+    direction: ltr !important;
   }
 }
 
 @layer components {
-  /* Fix Trix Editor text direction */
+  /* ===============================================
+     FIX TRIX EDITOR TEXT DIRECTION
+     =============================================== */
+  
   trix-editor {
     direction: ltr !important;
     text-align: left !important;
+    unicode-bidi: bidi-override !important;
+    min-height: 150px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0.75rem;
+  }
+
+  /* Force LTR untuk semua child element di dalam Trix */
+  trix-editor *,
+  trix-editor div,
+  trix-editor p,
+  trix-editor span,
+  trix-editor h1,
+  trix-editor h2,
+  trix-editor h3,
+  trix-editor h4,
+  trix-editor h5,
+  trix-editor h6,
+  trix-editor ul,
+  trix-editor ol,
+  trix-editor li,
+  trix-editor blockquote {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: normal !important;
   }
 
   .trix-content {
     direction: ltr !important;
+    text-align: left !important;
   }
 
   trix-toolbar {
     direction: ltr !important;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-bottom: none;
+    border-radius: 0.5rem 0.5rem 0 0;
   }
 
   trix-toolbar * {
     direction: ltr !important;
   }
 
-  /* Ensure all text inputs use LTR */
+  /* Trix Editor Focus State - FIXED */
+  trix-editor:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Hide attachment button jika tidak digunakan */
+  trix-toolbar .trix-button--icon-attach {
+    display: none;
+  }
+
+  /* ===============================================
+     FIX ALL TEXT INPUTS LTR
+     =============================================== */
+  
   input[type="text"],
   input[type="email"],
   input[type="password"],
   input[type="search"],
   input[type="url"],
   input[type="tel"],
-  textarea {
+  input[type="number"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="time"],
+  textarea,
+  select {
     direction: ltr !important;
     text-align: left !important;
   }
 
-  /* Fix for any RTL issues in the app */
+  /* ===============================================
+     FIX RTL ISSUES IN APP
+     =============================================== */
+  
   .prose {
     direction: ltr !important;
+  }
+
+  .prose * {
+    direction: ltr !important;
+    text-align: left !important;
+  }
+
+  /* Force LTR untuk modal dan dialog */
+  .modal,
+  .modal-content,
+  .dialog,
+  [role="dialog"] {
+    direction: ltr !important;
+  }
+
+  /* Force LTR untuk form elements */
+  form,
+  fieldset,
+  label {
+    direction: ltr !important;
+    text-align: left !important;
+  }
+
+  /* Force LTR untuk table */
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    direction: ltr !important;
+    text-align: left !important;
+  }
+
+  /* ===============================================
+     UTILITY CLASSES
+     =============================================== */
+  
+  /* Class untuk memaksa LTR jika diperlukan */
+  .force-ltr {
+    direction: ltr !important;
+    text-align: left !important;
+  }
+
+  /* Class untuk content HTML */
+  .html-content,
+  .rendered-content {
+    direction: ltr !important;
+  }
+
+  .html-content *,
+  .rendered-content * {
+    direction: ltr !important;
+  }
+}
+
+/* ===============================================
+   CUSTOM SCROLLBAR (OPTIONAL)
+   =============================================== */
+
+@layer utilities {
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+}
+
+/* ===============================================
+   PRINT STYLES (OPTIONAL)
+   =============================================== */
+
+@media print {
+  * {
+    direction: ltr !important;
+    text-align: left !important;
+  }
+  
+  trix-editor,
+  trix-toolbar {
+    border: none !important;
   }
 }

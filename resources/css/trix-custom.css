@@ -1,17 +1,31 @@
-/* Force LTR direction for Trix Editor */
+/* Force LTR direction pada Trix Editor */
 trix-editor {
     direction: ltr !important;
     text-align: left !important;
+    unicode-bidi: bidi-override !important;
     min-height: 150px;
     max-height: 400px;
     overflow-y: auto;
     padding: 0.75rem;
 }
 
-trix-editor * {
+/* Paksa semua element di dalam trix editor jadi LTR */
+trix-editor *,
+trix-editor div,
+trix-editor p,
+trix-editor span,
+trix-editor h1,
+trix-editor h2,
+trix-editor ul,
+trix-editor ol,
+trix-editor li,
+trix-editor blockquote {
     direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: normal !important;
 }
 
+/* Toolbar styling */
 trix-toolbar {
     background: #f9fafb;
     border: 1px solid #d1d5db;
@@ -19,25 +33,20 @@ trix-toolbar {
     border-radius: 0.5rem 0.5rem 0 0;
 }
 
+/* Editor focus state */
 trix-editor:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Styling untuk konten di dalam editor */
-trix-editor h1,
-trix-editor p,
-trix-editor div,
-trix-editor span,
-trix-editor ul,
-trix-editor ol,
-trix-editor li {
-    direction: ltr !important;
-    text-align: left !important;
-}
-
-/* Remove attachment upload jika tidak diperlukan */
+/* Hide attachment button if not needed */
 trix-toolbar .trix-button--icon-attach {
     display: none;
+}
+
+/* Input area inside editor */
+trix-editor .trix-content {
+    direction: ltr !important;
+    text-align: left !important;
 }

@@ -1,5 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
+import '../css/trix-custom.css'; // ← TAMBAHKAN INI
 
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';

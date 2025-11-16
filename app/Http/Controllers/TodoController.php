@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -11,13 +12,13 @@ class TodoController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Todo::where('user_id', auth()->id());
+        $query = Todo::where('user_id', Auth::id());
 
         // Pencarian
         if ($request->has('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
-                    ->orWhere('description', 'like', '%' . $request->search . '%');
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -31,28 +32,23 @@ class TodoController extends Controller
             $query->where('priority', $request->priority);
         }
 
-        // Sorting
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
-
-        $todos = $query->paginate(20)->withQueryString();
+        $todos = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
 
         // Statistik
         $statistics = [
-            'total' => Todo::where('user_id', auth()->id())->count(),
-            'completed' => Todo::where('user_id', auth()->id())->where('status', 'completed')->count(),
-            'in_progress' => Todo::where('user_id', auth()->id())->where('status', 'in_progress')->count(),
-            'pending' => Todo::where('user_id', auth()->id())->where('status', 'pending')->count(),
-            'high_priority' => Todo::where('user_id', auth()->id())->where('priority', 'high')->count(),
-            'medium_priority' => Todo::where('user_id', auth()->id())->where('priority', 'medium')->count(),
-            'low_priority' => Todo::where('user_id', auth()->id())->where('priority', 'low')->count(),
+            'total' => Todo::where('user_id', Auth::id())->count(),
+            'completed' => Todo::where('user_id', Auth::id())->where('status', 'completed')->count(),
+            'in_progress' => Todo::where('user_id', Auth::id())->where('status', 'in_progress')->count(),
+            'pending' => Todo::where('user_id', Auth::id())->where('status', 'pending')->count(),
+            'high_priority' => Todo::where('user_id', Auth::id())->where('priority', 'high')->count(),
+            'medium_priority' => Todo::where('user_id', Auth::id())->where('priority', 'medium')->count(),
+            'low_priority' => Todo::where('user_id', Auth::id())->where('priority', 'low')->count(),
         ];
 
         return Inertia::render('Todos/Index', [
             'todos' => $todos,
             'statistics' => $statistics,
-            'filters' => $request->only(['search', 'status', 'priority', 'sort_by', 'sort_order'])
+            'filters' => $request->only(['search', 'status', 'priority'])
         ]);
     }
 
@@ -67,7 +63,8 @@ class TodoController extends Controller
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $validated['user_id'] = auth()->id();
+        // INI YANG PENTING: Set user_id dari user yang login
+        $validated['user_id'] = Auth::id();
 
         if ($request->hasFile('cover')) {
             $validated['cover'] = $request->file('cover')->store('covers', 'public');
@@ -80,8 +77,8 @@ class TodoController extends Controller
 
     public function update(Request $request, Todo $todo)
     {
-        // Pastikan user hanya bisa update todo miliknya
-        if ($todo->user_id !== auth()->id()) {
+        // Cek apakah todo ini milik user yang login
+        if ($todo->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -100,7 +97,7 @@ class TodoController extends Controller
 
     public function updateCover(Request $request, Todo $todo)
     {
-        if ($todo->user_id !== auth()->id()) {
+        if ($todo->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -113,6 +110,7 @@ class TodoController extends Controller
             Storage::disk('public')->delete($todo->cover);
         }
 
+        // Upload cover baru
         $coverPath = $request->file('cover')->store('covers', 'public');
         $todo->update(['cover' => $coverPath]);
 
@@ -121,7 +119,7 @@ class TodoController extends Controller
 
     public function destroy(Todo $todo)
     {
-        if ($todo->user_id !== auth()->id()) {
+        if ($todo->user_id !== Auth::id()) {
             abort(403);
         }
 
